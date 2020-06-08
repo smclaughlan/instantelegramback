@@ -67,7 +67,7 @@ class Post(db.Model):
 
     poster = db.relationship("User", back_populates="user_pstr")
 
-    comment = db.relationship("Post", back_populates="post_cmnt")
+    comment = db.relationship("Comment", back_populates="post_cmnt")
     like_post = db.relationship("PostLike", back_populates="post_liked")
 
 

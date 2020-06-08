@@ -16,6 +16,7 @@ psycopg2-binary = "*"
 sqlalchemy = "*"
 wtforms = "*"
 flask-wtf = "*"
+pyjwt = "*"
 
 [requires]
 python_version = "3.8"
