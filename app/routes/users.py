@@ -12,7 +12,8 @@ def getUser(userId):
   returnData = {
   "id": user.id,
   "username": user.username,
-  "bio": user.bio
+  "bio": user.bio,
+  "avatarUrl": user.avatarUrl,
   }
   if user:
     return returnData
