@@ -4,6 +4,7 @@ from .models import User
 from functools import wraps
 from .config import Configuration
 
+
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -15,7 +16,7 @@ def token_required(f):
         try:
             data = jwt.decode(token, Configuration.SECRET_KEY)
             current_user = User.query.filter_by(id=data['user_id']).first()
-        except:
+        except Exception:
             return {'message': 'token is invalid'}, 401
         return f(current_user, *args, **kwargs)
     return decorator

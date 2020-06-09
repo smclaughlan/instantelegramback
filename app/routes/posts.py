@@ -4,6 +4,7 @@ from ..util import token_required
 
 bp = Blueprint('posts', __name__, url_prefix='/posts')
 
+
 @bp.route('/', methods=['POST'])
 @token_required
 def post(current_user):
@@ -15,4 +16,4 @@ def post(current_user):
     )
     db.session.add(post)
     db.session.commit()
-    return {'you just posted!'}
+    return {'message': 'you just posted!'}

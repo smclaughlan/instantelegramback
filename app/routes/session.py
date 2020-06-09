@@ -7,6 +7,7 @@ from ..util import token_required
 
 bp = Blueprint('session', __name__, url_prefix='/api/session')
 
+
 @bp.route('/register', methods=['POST'])
 def register_user():
     data = request.json
@@ -23,7 +24,10 @@ def register_user():
     # print(Configuration.SECRET_KEY)
     token = jwt.encode({'user_id': new_user.id}, Configuration.SECRET_KEY)
     # return 'wow'
-    return {'token': token.decode('UTF-8')}
+    return {
+        'token': token.decode('UTF-8'),
+        'currentUserId': new_user.id,
+        }
 
 
 @bp.route('/login', methods=['POST'])
@@ -32,7 +36,10 @@ def login_user():
     user = User.query.filter_by(username=data['username']).first()
     if user.check_password(data['password']):
         token = jwt.encode({'user_id': user.id}, Configuration.SECRET_KEY)
-        return {'token': token.decode('UTF-8')}
+        return {
+            'token': token.decode('UTF-8'),
+            'currentUserId': user.id,
+        }
     else:
         return {'message': 'Invalid credentials'}, 401
 
