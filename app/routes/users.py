@@ -9,14 +9,11 @@ bp = Blueprint('users', __name__, url_prefix='/api/users')
 @bp.route("/<int:userId>")
 def getUser(userId):
   user = User.query.filter(User.id == userId).first()
-  # user = user[0]
-  print(user)
-  print(type(user))
-  print(user.__dict__)
   returnData = {
   "id": user.id,
   "username": user.username,
-  "bio": user.bio}
+  "bio": user.bio
+  }
   if user:
     return returnData
   else:
