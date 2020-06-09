@@ -30,7 +30,7 @@ def register_user():
 def login_user():
     data = request.json
     user = User.query.filter_by(username=data['username']).first()
-    if user.check_password(data['hashed_password']):
+    if user.check_password(data['password']):
         token = jwt.encode({'user_id': user.id}, Configuration.SECRET_KEY)
         return {'token': token.decode('UTF-8')}
     else:
