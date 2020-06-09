@@ -19,6 +19,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
+    avatarUrl = db.Column(db.Text, default="https://res.cloudinary.com/dgzcv1mcs/image/upload/v1589817904/bw2djxdddpa1mjpshity.jpg")
     username = db.Column(db.String(20), unique=True, nullable=False)
     hashed_password = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
