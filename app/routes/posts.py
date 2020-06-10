@@ -55,4 +55,3 @@ def getPost(userId):
             'user_id': post.user_id
         })
     return {"posts": returnList}
-

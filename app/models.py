@@ -53,7 +53,6 @@ class Follow(db.Model):
     follower_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     db.UniqueConstraint(followed_id, follower_id)
 
-
     # # possibly different syntax?
     follower = db.relationship("User", foreign_keys=[follower_id])
     followed = db.relationship("User", foreign_keys=[followed_id])
