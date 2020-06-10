@@ -30,8 +30,8 @@ with app.app_context():
         followed=user2,
     )
     post1 = Post(
-        image='someurl@cloudinary.com',
-        caption='an amazing picture',
+        image='https://res.cloudinary.com/dgzcv1mcs/image/upload/v1591737505/ma9c57wqt1dioyxd3gdc.jpg',
+        caption='Ravesignal III',
         poster=user1,
     )
 

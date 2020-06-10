@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
@@ -64,6 +65,7 @@ class Post(db.Model):
     image = db.Column(db.Text, nullable=False)
     caption = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
 
     poster = db.relationship("User", back_populates="user_pstr")
 
