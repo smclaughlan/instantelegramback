@@ -17,3 +17,17 @@ def post(current_user):
     db.session.add(post)
     db.session.commit()
     return {'message': 'you just posted!'}
+
+
+@bp.route('/<int:userId>')
+def getPost(userId):
+    posts = Post.query.filter(Post.user_id == userId).all()
+    returnList = []
+    for post in posts:
+        returnList.append({
+            'id': post.id,
+            'image': post.image,
+            'caption': post.caption,
+            'user_id': post.user_id
+        })
+    return {"posts": returnList}
