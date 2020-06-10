@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from sqlalchemy import update
 from app.models import User, db
 
 from ..config import Configuration
@@ -19,3 +20,17 @@ def getUser(userId):
     return returnData
   else:
     return "Error"
+
+@bp.route("/<int:userId>", methods=["PUT"])
+def putUser(userId):
+  # print(request.json)
+  user = User.query.filter(User.id == userId).first()
+  reqData = request.json
+  # print(dir(reqData))
+  # print(dir(user))
+  if 'avatar' in reqData:
+    user.avatarUrl = reqData['avatar']
+  if 'bio' in reqData:
+    user.bio = reqData['bio']
+  db.session.commit()
+  return "Updated"
