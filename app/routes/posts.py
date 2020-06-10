@@ -35,7 +35,7 @@ def updateCaption(current_user, id):
         'user_id': post.user_id,
         'timestamp': post.timestamp
     }
-    return {'data': post}
+    return post
 
 
 @bp.route('/<id>', methods=['DELETE'])
@@ -53,14 +53,11 @@ def deletePost(current_user, id):
 
 @bp.route('/<int:userId>')
 def getPost(userId):
-    posts = Post.query.filter(Post.user_id == userId).all()
-    returnList = []
-    for post in posts:
-        returnList.append({
-            'id': post.id,
-            'image': post.image,
-            'caption': post.caption,
-            'user_id': post.user_id,
-            'timestamp': post.timestamp,
-        })
-    return {"posts": returnList}
+    posts = list(Post.query.filter(Post.user_id == userId).all())
+    returnPosts = dict((post.id, {
+        'imageUrl': post.image,
+        'caption': post.caption,
+        'user_id': post.user_id,
+        'timestamp': post.timestamp,
+        }) for post in posts)
+    return returnPosts
