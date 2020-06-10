@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
@@ -53,7 +54,6 @@ class Follow(db.Model):
     follower_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     db.UniqueConstraint(followed_id, follower_id)
 
-
     # # possibly different syntax?
     follower = db.relationship("User", foreign_keys=[follower_id])
     followed = db.relationship("User", foreign_keys=[followed_id])
@@ -65,6 +65,7 @@ class Post(db.Model):
     image = db.Column(db.Text, nullable=False)
     caption = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
 
     poster = db.relationship("User", back_populates="user_pstr")
 

@@ -23,10 +23,18 @@ def post(current_user):
 @token_required
 def updateCaption(current_user, id):
     data = request.json
-    db.session.query(Post).filter(Post.id == id).update({Post.caption: data['caption']})
+    db.session.query(Post).\
+        filter(Post.id == id).\
+        update({Post.caption: data['caption']})
     db.session.commit()
     post = Post.query.get(id)
-    post = {'id': post.id, 'image': post.image, 'caption': post.caption, 'user_id': post.user_id}
+    post = {
+        'id': post.id,
+        'image': post.image,
+        'caption': post.caption,
+        'user_id': post.user_id,
+        'timestamp': post.timestamp
+    }
     return {'data': post}
 
 
@@ -52,7 +60,7 @@ def getPost(userId):
             'id': post.id,
             'image': post.image,
             'caption': post.caption,
-            'user_id': post.user_id
+            'user_id': post.user_id,
+            'timestamp': post.timestamp,
         })
     return {"posts": returnList}
-
