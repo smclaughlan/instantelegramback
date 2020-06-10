@@ -23,26 +23,14 @@ def getUser(userId):
 
 @bp.route("/<int:userId>", methods=["PUT"])
 def putUser(userId):
-  print(request.json)
+  # print(request.json)
   user = User.query.filter(User.id == userId).first()
   reqData = request.json
-  print(dir(reqData))
-  print(dir(user))
-  # if 'avatar' in reqData:
-    # user.avatarUrl = reqData.avatar
-  # elif 'bio' in reqData:
-#   updatedData = {
-#   "id": user.id,
-#   "username": user.username,
-#   "email": user.email,
-#   "bio": reqData["bio"],
-#   "avatarUrl": user.avatarUrl,
-#   }
-  user.bio = reqData.data
-
-#   user.update(**updatedData)
-
-  # newUser = update(user).values(bio= reqData["bio"])
-
+  # print(dir(reqData))
+  # print(dir(user))
+  if 'avatar' in reqData:
+    user.avatarUrl = reqData['avatar']
+  if 'bio' in reqData:
+    user.bio = reqData['bio']
   db.session.commit()
-  return "Test"
+  return "Updated"
