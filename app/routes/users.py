@@ -1,6 +1,6 @@
 from flask import Blueprint, request
-from sqlalchemy import update
-from app.models import User, db
+from sqlalchemy import update, and_
+from app.models import User, Follow, db
 
 from ..config import Configuration
 from ..util import token_required
@@ -34,3 +34,24 @@ def putUser(userId):
     user.bio = reqData['bio']
   db.session.commit()
   return "Updated"
+
+@bp.route("/<int:followedId>/follow", methods=["POST"])
+def followeReq(followedId):
+    reqData = request.json
+    newFollow = Follow()
+    newFollow.followed_id = followedId
+    newFollow.follower_id = reqData['userId']
+    db.session.add(newFollow)
+    db.session.commit()
+    return "New followe added"
+
+@bp.route("/<int:followedId>/follow", methods=["DELETE"])
+def unfolloweReq(followedId):
+    reqData = request.json
+    print(reqData)
+    print(followedId)
+    delFollow = Follow.query.filter(and_(Follow.follower_id==int(reqData['userId']), Follow.followed_id==followedId)).first()
+    print(delFollow)
+    db.session.delete(delFollow)
+    db.session.commit()
+    return "Follow removed"

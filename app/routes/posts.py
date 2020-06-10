@@ -29,6 +29,7 @@ def updateCaption(current_user, id):
     post = {'id': post.id, 'image': post.image, 'caption': post.caption, 'user_id': post.user_id}
     return {'data': post}
 
+
 @bp.route('/<id>', methods=['DELETE'])
 @token_required
 def deletePost(current_user, id):
@@ -40,3 +41,18 @@ def deletePost(current_user, id):
         db.session.commit()
         return {'message': 'you just deleted!'}
     return {'message': 'you can\'t delete this!'}
+
+
+@bp.route('/<int:userId>')
+def getPost(userId):
+    posts = Post.query.filter(Post.user_id == userId).all()
+    returnList = []
+    for post in posts:
+        returnList.append({
+            'id': post.id,
+            'image': post.image,
+            'caption': post.caption,
+            'user_id': post.user_id
+        })
+    return {"posts": returnList}
+
