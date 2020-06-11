@@ -11,7 +11,7 @@ bp = Blueprint('session', __name__, url_prefix='/api/session')
 @bp.route('/register', methods=['POST'])
 def register_user():
     data = request.json
-    print(data)
+
     hashed_password = generate_password_hash(data['hashed_password'])
     new_user = User(username=data['username'],
                     email=data['email'],
@@ -20,8 +20,7 @@ def register_user():
                     )
     db.session.add(new_user)
     db.session.commit()
-    # print("THIS IS OUR PRINT STATEMENT")
-    # print(Configuration.SECRET_KEY)
+
     token = jwt.encode({'user_id': new_user.id}, Configuration.SECRET_KEY)
     # return 'wow'
     return {
