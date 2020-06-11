@@ -1,5 +1,6 @@
 from flask import Blueprint, request
-from app.models import Post, db
+from sqlalchemy import and_
+from app.models import Post, PostLike, db
 from ..util import token_required
 
 bp = Blueprint('posts', __name__, url_prefix='/posts')
@@ -61,3 +62,27 @@ def getPost(userId):
         'timestamp': post.timestamp,
         }) for post in posts)
     return returnPosts
+
+
+@bp.route('/<int:id>/likes', methods=["POST"])
+@token_required
+def createlike(current_user, id):
+    like = PostLike(
+        post_liker=current_user,
+        post_id=id,
+    )
+    db.session.add(like)
+    db.session.commit()
+    likesList = list(PostLike.query.filter(PostLike.post_id == id).all())
+    returnList = [like.user_id for like in likesList]
+    return {"data": returnList}
+
+
+@bp.route('/<int:id>/likes', methods=["DELETE"])
+@token_required
+def deletelike(current_user, id):
+    db.session.query(PostLike).filter(and_((PostLike.post_id == id), (PostLike.user_id == current_user.id))).delete()
+    db.session.commit()
+    likesList = list(PostLike.query.filter(PostLike.post_id == id).all())
+    returnList = [like.user_id for like in likesList]
+    return {"data": returnList}
