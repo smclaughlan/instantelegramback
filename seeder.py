@@ -6,7 +6,7 @@ load_dotenv()
 # so that the environment variables are
 # properly loaded.
 from app import app, db
-from app.models import User, Follow, Post
+from app.models import User, Follow, Post, PostLike
 
 
 with app.app_context():
@@ -95,7 +95,7 @@ with app.app_context():
     )
     post8 = Post(
         image='https://res.cloudinary.com/dgzcv1mcs/image/upload/v1591832876/Instantelegram/venice-3118803_960_720_eslila.jpg',
-        caption='Venice Palace,
+        caption='Venice Palace',
         poster=user3,
     )
     post9 = Post(
@@ -104,20 +104,20 @@ with app.app_context():
         poster=user3,
     )
     like1 = PostLike(
-        post_liked=post6
-        post_liker=user1
+        post_liked=post6,
+        post_liker=user1,
     )
     like2 = PostLike(
-        post_liked=post7
-        post_liker=user1
+        post_liked=post7,
+        post_liker=user1,
     )
     like3 = PostLike(
-        post_liked=post8
-        post_liker=user1
+        post_liked=post8,
+        post_liker=user1,
     )
     like4 = PostLike(
-        post_liked=post9
-        post_liker=user1
+        post_liked=post9,
+        post_liker=user1,
     )
 
     db.session.add(user1)
