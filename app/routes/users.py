@@ -23,11 +23,10 @@ def getUser(userId):
 
 @bp.route("/<int:userId>", methods=["PUT"])
 def putUser(userId):
-  # print(request.json)
+
   user = User.query.filter(User.id == userId).first()
   reqData = request.json
-  # print(dir(reqData))
-  # print(dir(user))
+
   if 'avatar' in reqData:
     user.avatarUrl = reqData['avatar']
   if 'bio' in reqData:
@@ -48,10 +47,16 @@ def followeReq(followedId):
 @bp.route("/<int:followedId>/follow", methods=["DELETE"])
 def unfolloweReq(followedId):
     reqData = request.json
-    print(reqData)
-    print(followedId)
+
     delFollow = Follow.query.filter(and_(Follow.follower_id==int(reqData['userId']), Follow.followed_id==followedId)).first()
-    print(delFollow)
+
     db.session.delete(delFollow)
     db.session.commit()
     return "Follow removed"
+
+@bp.route("/<int:followedId>/followings")
+def followings(followedId):
+  followings = Follow.query.filter(Follow.follower_id==followedId).all()
+  returnFollowings =  dict((following.id, {'followingId': following.followed_id}) for following in followings)
+
+  return returnFollowings
