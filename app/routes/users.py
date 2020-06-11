@@ -24,15 +24,15 @@ def getUser(userId):
 @bp.route("/<int:userId>", methods=["PUT"])
 def putUser(userId):
 
-  user = User.query.filter(User.id == userId).first()
-  reqData = request.json
+    user = User.query.filter(User.id == userId).first()
+    reqData = request.json
 
-  if 'avatar' in reqData:
-    user.avatarUrl = reqData['avatar']
-  if 'bio' in reqData:
-    user.bio = reqData['bio']
-  db.session.commit()
-  return "Updated"
+    if 'avatar' in reqData:
+        user.avatarUrl = reqData['avatar']
+    if 'bio' in reqData:
+        user.bio = reqData['bio']
+    db.session.commit()
+    return "Updated"
 
 @bp.route("/<int:followedId>/follow", methods=["POST"])
 def followeReq(followedId):
@@ -44,19 +44,21 @@ def followeReq(followedId):
     db.session.commit()
     return "New followe added"
 
+
 @bp.route("/<int:followedId>/follow", methods=["DELETE"])
 def unfolloweReq(followedId):
     reqData = request.json
 
-    delFollow = Follow.query.filter(and_(Follow.follower_id==int(reqData['userId']), Follow.followed_id==followedId)).first()
+    delFollow = Follow.query.filter(and_(Follow.follower_id == int(reqData['userId']), Follow.followed_id == followedId)).first()
 
     db.session.delete(delFollow)
     db.session.commit()
     return "Follow removed"
 
+
 @bp.route("/<int:followedId>/followings")
 def followings(followedId):
-  followings = Follow.query.filter(Follow.follower_id==followedId).all()
-  returnFollowings =  dict((following.id, {'followingId': following.followed_id}) for following in followings)
+    followings = Follow.query.filter(Follow.follower_id == followedId).all()
+    returnFollowings =  dict((following.id, {'followingId': following.followed_id}) for following in followings)
 
-  return returnFollowings
+    return returnFollowings
