@@ -2,11 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
 from .config import Configuration
-<<<<<<< HEAD
-from .routes import comments, follows, session, likes, posts, users
-=======
-from .routes import session, likes, posts, users
->>>>>>> master
+from .routes import comments, session, likes, posts, users
 from .models import db
 
 app = Flask(__name__)
