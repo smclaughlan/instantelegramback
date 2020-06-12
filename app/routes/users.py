@@ -1,6 +1,7 @@
 from flask import Blueprint, request
-from sqlalchemy import update, and_
-from app.models import User, Follow, db
+from sqlalchemy import update, and_, desc
+from app.models import User, Follow, Post, db
+# import datetime
 
 from ..config import Configuration
 from ..util import token_required
@@ -60,3 +61,25 @@ def followings(followedId):
   returnFollowings =  dict((following.id, {'followingId': following.followed_id}) for following in followings)
 
   return returnFollowings
+
+@bp.route("/<int:userId>/posts")
+def feed_posts(userId):
+  queryIds = [userId]
+  followingIds = Follow.query.filter(Follow.follower_id==userId).all()
+  for followingId in followingIds:
+    queryIds.append(followingId.followed_id)
+  posts = Post.query.filter(Post.user_id.in_(queryIds))
+  
+  for post in posts:
+    print('postId:', post.id)
+  # epoch = datetime.datetime.utcfromtimestamp(0)
+
+  returnPosts = dict((post.id, {
+    'imageUrl': post.image,
+    'caption': post.caption,
+    'user_id': post.user_id,
+    # 'timestamp': (post.timestamp - epoch).total_seconds() * 1000.0,
+    'timestamp': post.timestamp,
+    }) for post in posts)
+
+  return returnPosts
