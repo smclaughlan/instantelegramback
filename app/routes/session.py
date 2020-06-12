@@ -22,7 +22,6 @@ def register_user():
     db.session.commit()
 
     token = jwt.encode({'user_id': new_user.id}, Configuration.SECRET_KEY)
-    # return 'wow'
     return {
         'token': token.decode('UTF-8'),
         'currentUserId': new_user.id,
@@ -47,14 +46,3 @@ def login_user():
 @token_required
 def check_auth(current_user):
     return {'message': 'User is authorized!', 'user_id': current_user.id}
-
-
-# @bp.route('/all')
-# @token_required
-# def get_all_users(current_user):
-#     users = User.query.all()
-
-#     users = {user.id: {'username': user.username, 'email': user.email}
-#              for user in users}
-
-#     return {'data': users}

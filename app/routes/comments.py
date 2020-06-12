@@ -9,15 +9,6 @@ bp = Blueprint("comments", __name__, url_prefix="/comments")
 @bp.route('/')
 def getComments():
     comments = list(Comment.query.all())
-    # dict
-    # if the likes.post_id not there, add
-    # otherwise loop through like and set values
-    # returnDict = {
-    #   post_id: {
-    #     commment_id: {}
-    #     comment
-    # }
-    # }
     returnDict = dict()
     for comment in comments:
         if comment.post_id not in returnDict:
@@ -38,7 +29,6 @@ def getComments():
                 'body': comment.body,
                 'timestamp': comment.timestamp
             }
-    # print(returnDict)
     return returnDict
 
 
@@ -79,5 +69,4 @@ def deleteComment(current_user, commentId):
             'body': comment.body,
             'timestamp': comment.timestamp,
         }) for comment in comments)
-    # print(returnDict)
     return returnDict
