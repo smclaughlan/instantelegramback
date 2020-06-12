@@ -6,7 +6,7 @@ load_dotenv()
 # so that the environment variables are
 # properly loaded.
 from app import app, db
-from app.models import User, Follow, Post, PostLike
+from app.models import User, Follow, Post, PostLike, Comment
 
 
 with app.app_context():
@@ -119,6 +119,36 @@ with app.app_context():
         post_liked=post9,
         post_liker=user1,
     )
+    comment1 = Comment(
+        post_cmnt=post7,
+        commenter=user2,
+        body='Amazing picture'
+    )
+    comment2 = Comment(
+        post_cmnt=post6,
+        commenter=user1,
+        body='Great Photo!!'
+    )
+    comment3 = Comment(
+        post_cmnt=post7,
+        commenter=user1,
+        body='Cool'
+    )
+    comment4 = Comment(
+        post_cmnt=post6,
+        commenter=user3,
+        body='Super cool picture!!',
+    )
+    comment5 = Comment(
+        post_cmnt=post7,
+        commenter=user2,
+        body='OH MY GOD ;__; beautiful',
+    )
+    comment6 = Comment(
+        post_cmnt=post6,
+        commenter=user4,
+        body='WOW!!!!!!!',
+    )
 
     db.session.add(user1)
     db.session.add(user2)
@@ -142,4 +172,10 @@ with app.app_context():
     db.session.add(like2)
     db.session.add(like3)
     db.session.add(like4)
+    db.session.add(comment1)
+    db.session.add(comment2)
+    db.session.add(comment3)
+    db.session.add(comment4)
+    db.session.add(comment5)
+    db.session.add(comment6)
     db.session.commit()

@@ -79,6 +79,7 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     body = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
 
     post_cmnt = db.relationship("Post", back_populates="comment")
     commenter = db.relationship("User", back_populates="user_cmntr")
