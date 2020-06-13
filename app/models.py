@@ -4,18 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
-# v6sk3jsl
-
-# follow = db.Table(
-#     "follow",
-#     db.Model.metadata,
-#     db.Column("following_id", db.Integer, db.ForeignKey(
-#         "users.id"), primary_key=True),
-#     db.Column("follower_id", db.Integer, db.ForeignKey(
-#         "users.id"), primary_key=True)
-# )
-
-
 class User(db.Model):
     __tablename__ = "users"
 
@@ -54,7 +42,6 @@ class Follow(db.Model):
     follower_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     db.UniqueConstraint(followed_id, follower_id)
 
-    # # possibly different syntax?
     follower = db.relationship("User", foreign_keys=[follower_id])
     followed = db.relationship("User", foreign_keys=[followed_id])
 

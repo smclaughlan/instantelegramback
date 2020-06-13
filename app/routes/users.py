@@ -71,16 +71,11 @@ def feed_posts(userId):
   for followingId in followingIds:
     queryIds.append(followingId.followed_id)
   posts = Post.query.filter(Post.user_id.in_(queryIds))
-  
-  for post in posts:
-    print('postId:', post.id)
-  # epoch = datetime.datetime.utcfromtimestamp(0)
 
   returnPosts = dict((post.id, {
     'imageUrl': post.image,
     'caption': post.caption,
     'user_id': post.user_id,
-    # 'timestamp': (post.timestamp - epoch).total_seconds() * 1000.0,
     'timestamp': post.timestamp,
     }) for post in posts)
 
