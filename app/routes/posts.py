@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from sqlalchemy import and_
-from app.models import Post, PostLike, db
+from app.models import Comment, Post, PostLike, db
 from ..util import token_required
 
 bp = Blueprint('posts', __name__, url_prefix='/posts')
@@ -42,6 +42,16 @@ def updateCaption(current_user, id):
 @bp.route('/<id>', methods=['DELETE'])
 @token_required
 def deletePost(current_user, id):
+    #delete all the postlikes for that imageId
+    delPostLikes = PostLike.query.filter(PostLike.post_id == id).delete()
+    #delete all the comments for that imageId
+    delComments = Comment.query.filter(Comment.post_id == id).delete()
+    # for like in delPostLikes:
+    #     like.delete()
+    # for comment in delComments:
+    #     comment.delete()
+    db.session.commit()
+
     post = Post.query.get(id)
     if not post:
         return {'message': 'you can\'t delete a post that doesn\'t exist!'}
