@@ -5,7 +5,7 @@ import jwt
 from ..config import Configuration
 from ..util import token_required
 
-bp = Blueprint('session', __name__, url_prefix='/api/session')
+bp = Blueprint('session', __name__, url_prefix='/session')
 
 
 @bp.route('/register', methods=['POST'])

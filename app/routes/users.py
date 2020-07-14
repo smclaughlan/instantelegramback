@@ -6,7 +6,7 @@ from app.models import User, Follow, Post, db
 from ..config import Configuration
 from ..util import token_required
 
-bp = Blueprint('users', __name__, url_prefix='/api/users')
+bp = Blueprint('users', __name__, url_prefix='/users')
 
 @bp.route("/<int:userId>")
 def getUser(userId):
