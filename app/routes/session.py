@@ -25,14 +25,14 @@ def register_user():
     return {
         'token': token.decode('UTF-8'),
         'currentUserId': new_user.id,
-        }
+    }
 
 
 @bp.route('/login', methods=['POST'])
 def login_user():
     data = request.json
     user = User.query.filter_by(username=data['username']).first()
-    if user.check_password(data['password']):
+    if user and user.check_password(data['password']):
         token = jwt.encode({'user_id': user.id}, Configuration.SECRET_KEY)
         return {
             'token': token.decode('UTF-8'),
