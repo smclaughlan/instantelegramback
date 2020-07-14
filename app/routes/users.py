@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from sqlalchemy import update, and_, desc
 from app.models import User, Follow, Post, db
-# import datetime
+
 
 from ..config import Configuration
 from ..util import token_required

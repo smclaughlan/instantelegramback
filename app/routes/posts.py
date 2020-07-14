@@ -46,10 +46,7 @@ def deletePost(current_user, id):
     delPostLikes = PostLike.query.filter(PostLike.post_id == id).delete()
     #delete all the comments for that imageId
     delComments = Comment.query.filter(Comment.post_id == id).delete()
-    # for like in delPostLikes:
-    #     like.delete()
-    # for comment in delComments:
-    #     comment.delete()
+   
     db.session.commit()
 
     post = Post.query.get(id)
