@@ -18,6 +18,7 @@ wtforms = "*"
 flask-wtf = "*"
 pyjwt = "*"
 flask-cors = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"

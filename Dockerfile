@@ -6,8 +6,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install pipenv && pipenv install
+RUN pip install -r requirements.txt
+# EXPOSE 5000
 
-EXPOSE 5000
-
-CMD ["pipenv", "run", "flask", "run"]
+CMD ["gunicorn", "app:app"]
