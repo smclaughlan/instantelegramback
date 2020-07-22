@@ -19,7 +19,7 @@ def post(current_user):
     db.session.commit()
     return {'message': 'you just posted!'}
 
-#updates a post caption
+#updates a post caption, checks if the user matches the owner/poster
 @bp.route('/<id>', methods=['PUT'])
 @token_required
 def updateCaption(current_user, id):
@@ -39,6 +39,7 @@ def updateCaption(current_user, id):
     return post
 
 #deletes a particular post after deleting all likes and comments for the post
+#checks if the user matches with the owner/poster
 @bp.route('/<id>', methods=['DELETE'])
 @token_required
 def deletePost(current_user, id):
@@ -58,7 +59,7 @@ def deletePost(current_user, id):
         return {'message': 'you just deleted!'}
     return {'message': 'you can\'t delete this!'}
 
-#returns all posts for an user
+#returns all posts for a user
 @bp.route('/<int:userId>')
 def getPost(userId):
     posts = list(Post.query.filter(Post.user_id == userId).all())
