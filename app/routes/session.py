@@ -7,7 +7,7 @@ from ..util import token_required
 
 bp = Blueprint('session', __name__, url_prefix='/session')
 
-
+#create a new user and sends back a token and currentUserId
 @bp.route('/register', methods=['POST'])
 def register_user():
     data = request.json
@@ -27,7 +27,9 @@ def register_user():
         'currentUserId': new_user.id,
     }
 
-
+# Given a particular user's username and password, checks to see if the credentials
+# match what is stored in the database
+#if not sends back a 401 status
 @bp.route('/login', methods=['POST'])
 def login_user():
     data = request.json

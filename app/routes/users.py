@@ -8,6 +8,7 @@ from ..util import token_required
 
 bp = Blueprint('users', __name__, url_prefix='/users')
 
+#returns info for a particular user 
 @bp.route("/<int:userId>")
 def getUser(userId):
   user = User.query.filter(User.id == userId).first()
@@ -22,6 +23,7 @@ def getUser(userId):
   else:
     return "Error"
 
+#updates a user's avatar or/and bio
 @bp.route("/<int:userId>", methods=["PUT"])
 def putUser(userId):
 
@@ -35,6 +37,7 @@ def putUser(userId):
     db.session.commit()
     return "Updated"
 
+#add a new followe for the current user
 @bp.route("/<int:followedId>/follow", methods=["POST"])
 def followeReq(followedId):
     reqData = request.json
@@ -45,7 +48,7 @@ def followeReq(followedId):
     db.session.commit()
     return "New followe added"
 
-
+#deletes the followe option for a particular user
 @bp.route("/<int:followedId>/follow", methods=["DELETE"])
 def unfolloweReq(followedId):
     reqData = request.json
@@ -56,14 +59,16 @@ def unfolloweReq(followedId):
     db.session.commit()
     return "Follow removed"
 
-
+#returns all the followings for a particular user
 @bp.route("/<int:followedId>/followings")
 def followings(followedId):
     followings = Follow.query.filter(Follow.follower_id == followedId).all()
     returnFollowings =  dict((following.id, {'followingId': following.followed_id}) for following in followings)
     return returnFollowings
 
-
+#returns all posts for a feed page for a particular user
+#start by getting all followings for the current user
+#then gets all post for all followings including the current user
 @bp.route("/<int:userId>/posts")
 def feed_posts(userId):
   queryIds = [userId]

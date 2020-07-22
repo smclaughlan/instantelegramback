@@ -5,7 +5,7 @@ from ..util import token_required
 
 bp = Blueprint("comments", __name__, url_prefix="/comments")
 
-
+# returns all comments 
 @bp.route('/')
 def getComments():
     comments = list(Comment.query.all())
@@ -31,7 +31,7 @@ def getComments():
             }
     return returnDict
 
-
+# create a new comment for a particular post, current user will be th owner/commenter
 @bp.route('/<int:postId>', methods=['POST'])
 @token_required
 def addComment(current_user, postId):
@@ -53,7 +53,7 @@ def addComment(current_user, postId):
         }) for comment in comments)
     return returnDict
 
-
+# deletes a particular comment, checks to see if user's id matches with owner of comment
 @bp.route('/<int:commentId>', methods=['DELETE'])
 @token_required
 def deleteComment(current_user, commentId):

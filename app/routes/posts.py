@@ -5,7 +5,7 @@ from ..util import token_required
 
 bp = Blueprint('posts', __name__, url_prefix='/posts')
 
-
+#create a new post with image and caption, current user will be owner/poster
 @bp.route('/', methods=['POST'])
 @token_required
 def post(current_user):
@@ -19,7 +19,7 @@ def post(current_user):
     db.session.commit()
     return {'message': 'you just posted!'}
 
-
+#updates a post caption
 @bp.route('/<id>', methods=['PUT'])
 @token_required
 def updateCaption(current_user, id):
@@ -38,7 +38,7 @@ def updateCaption(current_user, id):
     }
     return post
 
-
+#deletes a particular post after deleting all likes and comments for the post
 @bp.route('/<id>', methods=['DELETE'])
 @token_required
 def deletePost(current_user, id):
@@ -58,7 +58,7 @@ def deletePost(current_user, id):
         return {'message': 'you just deleted!'}
     return {'message': 'you can\'t delete this!'}
 
-
+#returns all posts for an user
 @bp.route('/<int:userId>')
 def getPost(userId):
     posts = list(Post.query.filter(Post.user_id == userId).all())
@@ -70,7 +70,7 @@ def getPost(userId):
         }) for post in posts)
     return returnPosts
 
-
+#add a new like to a particular post
 @bp.route('/<int:id>/likes', methods=["POST"])
 @token_required
 def createlike(current_user, id):
@@ -84,7 +84,7 @@ def createlike(current_user, id):
     returnList = [like.user_id for like in likesList]
     return {"data": returnList}
 
-
+#deletes a like for a particular post, checks if the current user matches the owner 
 @bp.route('/<int:id>/likes', methods=["DELETE"])
 @token_required
 def deletelike(current_user, id):

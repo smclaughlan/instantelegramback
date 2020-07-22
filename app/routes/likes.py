@@ -3,7 +3,7 @@ from ..models import db, PostLike, Post
 
 bp = Blueprint("likes", __name__, url_prefix="/likes")
 
-
+#returns all likes
 @bp.route('/')
 def getLikes():
     likes = list(PostLike.query.all())
