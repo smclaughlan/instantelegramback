@@ -7,5 +7,5 @@ bp = Blueprint("search", __name__, url_prefix="/search")
 @bp.route('/')
 def getUserIds():
     users = list(User.query.all())
-    returnDict = dict((user.id, user.username) for user in users)
+    returnDict = dict((user.id, { 'username': user.username, 'avi': user.avatarUrl}) for user in users)
     return returnDict
