@@ -1,6 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
 from werkzeug.security import generate_password_hash
 from app.models import User, db
+from sqlalchemy.exc import SQLAlchemyError
 import jwt
 from ..config import Configuration
 from ..util import token_required
@@ -18,14 +19,19 @@ def register_user():
                     hashed_password=hashed_password,
                     bio=data['bio']
                     )
-    db.session.add(new_user)
-    db.session.commit()
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        token = jwt.encode({'user_id': new_user.id}, Configuration.SECRET_KEY)
+        return {
+            'token': token.decode('UTF-8'),
+            'currentUserId': new_user.id,
+        }
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        error = str(e.__dict__['orig'])
+        return { 'error': error }, 401
 
-    token = jwt.encode({'user_id': new_user.id}, Configuration.SECRET_KEY)
-    return {
-        'token': token.decode('UTF-8'),
-        'currentUserId': new_user.id,
-    }
 
 # Given a particular user's username and password, checks to see if the credentials
 # match what is stored in the database
