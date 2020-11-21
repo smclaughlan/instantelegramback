@@ -8,7 +8,7 @@ from ..util import token_required
 
 bp = Blueprint('users', __name__, url_prefix='/users')
 
-#returns info for a particular user 
+#returns info for a particular user
 @bp.route("/<int:userId>")
 def getUser(userId):
   user = User.query.filter(User.id == userId).first()
@@ -80,7 +80,9 @@ def feed_posts(userId):
   returnPosts = dict((post.id, {
     'imageUrl': post.image,
     'caption': post.caption,
-    'user_id': post.user_id,
+    'userId': post.user_id,
+    'username': post.poster.username,
+    'avatarUrl': post.poster.avatarUrl,
     'timestamp': post.timestamp,
     }) for post in posts)
 
