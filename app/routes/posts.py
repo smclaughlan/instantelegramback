@@ -47,7 +47,7 @@ def deletePost(current_user, id):
     delPostLikes = PostLike.query.filter(PostLike.post_id == id).delete()
     #delete all the comments for that imageId
     delComments = Comment.query.filter(Comment.post_id == id).delete()
-   
+
     db.session.commit()
 
     post = Post.query.get(id)
@@ -57,7 +57,8 @@ def deletePost(current_user, id):
         db.session.query(Post).filter(Post.id == id).delete()
         db.session.commit()
         return {'message': 'you just deleted!'}
-    return {'message': 'you can\'t delete this!'}
+    else:
+        return {'message': 'you can\'t delete this!'}
 
 #returns all posts for a user
 @bp.route('/<int:userId>')
@@ -85,7 +86,7 @@ def createlike(current_user, id):
     returnList = [like.user_id for like in likesList]
     return {"data": returnList}
 
-#deletes a like for a particular post, checks if the current user matches the owner 
+#deletes a like for a particular post, checks if the current user matches the owner
 @bp.route('/<int:id>/likes', methods=["DELETE"])
 @token_required
 def deletelike(current_user, id):
