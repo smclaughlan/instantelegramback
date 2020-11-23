@@ -2,7 +2,6 @@ from flask import Blueprint, request
 from sqlalchemy import update, and_, desc
 from app.models import User, Follow, Post, db
 
-
 from ..config import Configuration
 from ..util import token_required
 
@@ -37,18 +36,23 @@ def putUser(userId):
     db.session.commit()
     return "Updated"
 
-#add a new followe for the current user
+#add a new follower for the current user
 @bp.route("/<int:followedId>/follow", methods=["POST"])
 def followeReq(followedId):
-    reqData = request.json
-    newFollow = Follow()
-    newFollow.followed_id = followedId
-    newFollow.follower_id = reqData['userId']
+    data = request.json
+    followerId = int(data['userId'])
+    newFollow = Follow(
+      followed_id=followedId,
+      follower_id=followerId,
+    )
     db.session.add(newFollow)
     db.session.commit()
-    return "New followe added"
 
-#deletes the followe option for a particular user
+    followers = Follow.query.filter(Follow.followed_id == followedId).all()
+    returnFollowers =  dict({'ids': [f.follower.id for f in followers]})
+    return returnFollowers
+
+#deletes the follow option for a particular user
 @bp.route("/<int:followedId>/follow", methods=["DELETE"])
 def unfolloweReq(followedId):
     reqData = request.json
@@ -59,12 +63,12 @@ def unfolloweReq(followedId):
     db.session.commit()
     return "Follow removed"
 
-#returns all the followings for a particular user
+#returns all the followers for a particular user
 @bp.route("/<int:followedId>/followings")
 def followings(followedId):
-    followings = Follow.query.filter(Follow.follower_id == followedId).all()
-    returnFollowings =  dict((following.id, {'followingId': following.followed_id}) for following in followings)
-    return returnFollowings
+    followers = Follow.query.filter(Follow.followed_id == followedId).all()
+    returnFollowers =  dict({'ids': [f.follower.id for f in followers]})
+    return returnFollowers
 
 #returns all posts for a feed page for a particular user
 #start by getting all followings for the current user
