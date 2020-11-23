@@ -36,7 +36,7 @@ def putUser(userId):
     db.session.commit()
     return "Updated"
 
-#add a new follower for the current user
+#creates a new follow
 @bp.route("/<int:followedId>/follow", methods=["POST"])
 def followeReq(followedId):
     data = request.json
@@ -52,7 +52,7 @@ def followeReq(followedId):
     returnFollowers =  dict({'ids': [f.follower.id for f in followers]})
     return returnFollowers
 
-#deletes the follow option for a particular user
+#deletes a particular follow
 @bp.route("/<int:followedId>/follow", methods=["DELETE"])
 def unfolloweReq(followedId):
     reqData = request.json
@@ -61,7 +61,10 @@ def unfolloweReq(followedId):
 
     db.session.delete(delFollow)
     db.session.commit()
-    return "Follow removed"
+
+    followers = Follow.query.filter(Follow.followed_id == followedId).all()
+    returnFollowers =  dict({'ids': [f.follower.id for f in followers]})
+    return returnFollowers
 
 #returns all the followers for a particular user
 @bp.route("/<int:followedId>/followings")
