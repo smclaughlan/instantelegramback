@@ -28,13 +28,22 @@ def putUser(userId):
 
     user = User.query.filter(User.id == userId).first()
     reqData = request.json
-
     if 'avatar' in reqData:
         user.avatarUrl = reqData['avatar']
     if 'bio' in reqData:
         user.bio = reqData['bio']
     db.session.commit()
-    return "Updated"
+
+    returnData = {
+      "id": user.id,
+      "username": user.username,
+      "bio": user.bio,
+      "avatarUrl": user.avatarUrl,
+    }
+    if user:
+      return returnData
+    else:
+      return "Error"
 
 #creates a new follow
 @bp.route("/<int:followedId>/follow", methods=["POST"])
