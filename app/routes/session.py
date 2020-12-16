@@ -12,8 +12,21 @@ bp = Blueprint('session', __name__, url_prefix='/session')
 @bp.route('/register', methods=['POST'])
 def register_user():
     data = request.json
-
     hashed_password = generate_password_hash(data['hashed_password'])
+
+    # validations
+    # TODO: move these to a decorator function in util.py
+    if len(data['username']) > 20:
+        return {'error': 'please choose a username with under 20 characters'}, 400
+
+    username_check = User.query.filter(User.username == data['username']).first()
+    email_check = User.query.filter(User.email == data['email']).first()
+    if username_check:
+        return {'error': f'username {username_check.username} is already taken'}, 400
+    if email_check:
+        return {'error': f'email {email_check.email} is already taken'}, 400
+
+    # creation of a new user
     new_user = User(username=data['username'],
                     email=data['email'],
                     hashed_password=hashed_password,
@@ -30,7 +43,7 @@ def register_user():
     except SQLAlchemyError as e:
         db.session.rollback()
         error = str(e.__dict__['orig'])
-        return { 'error': error }, 401
+        return { 'error': error }, 400
 
 
 # Given a particular user's username and password, checks to see if the credentials
@@ -47,7 +60,10 @@ def login_user():
             'currentUserId': user.id,
         }
     else:
-        return {'message': 'Invalid credentials'}, 401
+        if user:
+            return {'message': 'Invalid password'}, 401
+        else:
+            return {'message': 'Invalid username'}, 401
 
 
 @bp.route('/auth')
