@@ -1,2 +1,5 @@
 DATABASE_URL=yourdatabaseurl
 SECRET_KEY=yoursecretkey
+CLOUD_NAME=your cloudinary cloud name
+API_KEY=your cloudinary api key
+API_SECRET=your cloudinary api secret

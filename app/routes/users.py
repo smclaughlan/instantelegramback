@@ -1,6 +1,7 @@
-from flask import Blueprint, request
+from flask import abort, Blueprint, request
 from sqlalchemy import update, and_, desc
 from app.models import User, Follow, Post, db
+from cloudinary.uploader import upload
 
 
 from ..config import Configuration
@@ -26,16 +27,26 @@ def getUser(userId):
 #updates a user's avatar or/and bio
 @bp.route("/<int:userId>", methods=["PUT"])
 def putUser(userId):
-
     user = User.query.filter(User.id == userId).first()
     reqData = request.json
+    imageData = request.files
 
-    if 'avatar' in reqData:
-        user.avatarUrl = reqData['avatar']
-    if 'bio' in reqData:
+    print(imageData)
+
+    if 'profileImage' in imageData:
+      try:
+        imageUploadRes = upload(imageData['profileImage'], folder = "Instantelegram", allowed_formats = ['jpg', 'png'])
+        user.avatarUrl = imageUploadRes['secure_url']
+      except Exception as e:
+        print(e)
+        abort(400, description=e)
+    if reqData and 'bio' in reqData:
         user.bio = reqData['bio']
     db.session.commit()
-    return "Updated"
+    return {
+      "bio": user.bio,
+      "avatarUrl": user.avatarUrl,
+    }
 
 #add a new followe for the current user
 @bp.route("/<int:followedId>/follow", methods=["POST"])

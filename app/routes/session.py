@@ -22,9 +22,9 @@ def register_user():
     try:
         db.session.add(new_user)
         db.session.commit()
-        token = jwt.encode({'user_id': new_user.id}, Configuration.SECRET_KEY)
+        token = jwt.encode({'user_id': new_user.id}, Configuration.SECRET_KEY).decode('utf-8')
         return {
-            'token': token.decode('UTF-8'),
+            'token': token,
             'currentUserId': new_user.id,
         }
     except SQLAlchemyError as e:
@@ -41,9 +41,9 @@ def login_user():
     data = request.json
     user = User.query.filter_by(username=data['username']).first()
     if user and user.check_password(data['password']):
-        token = jwt.encode({'user_id': user.id}, Configuration.SECRET_KEY)
+        token = jwt.encode({'user_id': user.id}, Configuration.SECRET_KEY).decode('utf-8')
         return {
-            'token': token.decode('UTF-8'),
+            'token': token,
             'currentUserId': user.id,
         }
     else:

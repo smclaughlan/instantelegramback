@@ -1,7 +1,10 @@
-from flask import Blueprint, request
+from datetime import datetime
+from flask import abort, Blueprint, request
 from sqlalchemy import and_
 from app.models import Comment, Post, PostLike, db
+from cloudinary.uploader import upload
 from ..util import token_required
+
 
 bp = Blueprint('posts', __name__, url_prefix='/posts')
 
@@ -9,15 +12,21 @@ bp = Blueprint('posts', __name__, url_prefix='/posts')
 @bp.route('/', methods=['POST'])
 @token_required
 def post(current_user):
-    data = request.json
-    post = Post(
-        image=data['imgUrl'],
-        caption=data['caption'],
-        poster=current_user,
-    )
-    db.session.add(post)
-    db.session.commit()
-    return {'message': 'you just posted!'}
+    try:
+        image = request.files['image']
+        imageUploadRes = upload(image, folder = "Instantelegram", allowed_formats = ['jpg', 'png'])
+        post = Post(
+            image=imageUploadRes['secure_url'],
+            caption=request.form['caption'],
+            poster=current_user,
+            timestamp=datetime.utcnow()
+        )
+        db.session.add(post)
+        db.session.commit()
+        return {'message': 'you just posted!'}
+    except Exception as e:
+        print(e)
+        abort(400, description=e)
 
 #updates a post caption, checks if the user matches the owner/poster
 @bp.route('/<id>', methods=['PUT'])

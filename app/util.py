@@ -16,7 +16,8 @@ def token_required(f):
         try:
             data = jwt.decode(token, Configuration.SECRET_KEY)
             current_user = User.query.filter_by(id=data['user_id']).first()
-        except Exception:
+        except Exception as e:
+            print(e)
             return {'message': 'token is invalid'}, 401
         return f(current_user, *args, **kwargs)
     return decorator

@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from datetime import datetime
 from sqlalchemy import and_
 from ..models import db, Comment
 from ..util import token_required
@@ -40,6 +41,7 @@ def addComment(current_user, postId):
         post_id=postId,
         commenter=current_user,
         body=data['commentBody'],
+        timestamp=datetime.utcnow()
     )
     db.session.add(newComment)
     db.session.commit()
