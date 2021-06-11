@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import abort, Blueprint, request
 from datetime import datetime
 from sqlalchemy import and_
 from ..models import db, Comment
@@ -53,6 +53,22 @@ def addComment(current_user, postId):
             'body': comment.body,
             'timestamp': comment.timestamp,
         }) for comment in comments)
+    return returnDict
+
+# edit an existing comment for a particular post
+@bp.route('/<int:commentId>', methods=['PUT'])
+@token_required
+def editComment(current_user, commentId):
+    data = request.json
+    db.session.query(Comment).\
+        filter(and_((Comment.id == commentId), (Comment.commenter == current_user))).\
+        update({ Comment.body: data['body']})
+    db.session.commit()
+    comment = Comment.query.get(commentId)
+    returnDict = {
+            'id': comment.id,
+            'body': comment.body,
+        }
     return returnDict
 
 # deletes a particular comment, checks to see if user's id matches with owner of comment
