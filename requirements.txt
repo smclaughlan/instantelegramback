@@ -1,5 +1,5 @@
 alembic==1.4.2
-certifi==2021.5.30
+certifi==2022.12.7
 click==7.1.2
 cloudinary==1.25.0
 Flask==1.1.2
